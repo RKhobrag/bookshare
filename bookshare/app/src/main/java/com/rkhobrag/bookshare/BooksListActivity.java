@@ -1,5 +1,7 @@
 package com.rkhobrag.bookshare;
 
+import android.app.SearchManager;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.view.MenuItemCompat;
@@ -10,7 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.android.volley.Request;
@@ -32,10 +36,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.support.v4.content.ContextCompat.startActivity;
+import static java.security.AccessController.getContext;
+
 public class BooksListActivity extends AppCompatActivity {
 
     private ArrayList<BookModel> data = new ArrayList<>();
     ArrayAdapter bookAdapter;
+    private String q="Fiction";
+    FrameLayout progressBarHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +54,34 @@ public class BooksListActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            q=query;
+        }
+
         ListView booklistView = (ListView) findViewById(R.id.book_list);
 
         bookAdapter = new BookAdapter(data, getBaseContext());
         booklistView.setAdapter(bookAdapter);
-        getData();
-    }
 
+        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
+
+        getData();
+
+        booklistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BookModel dataModel = data.get(position);;
+                openBookDetailsPage(dataModel);
+            }
+        });
+    }
+    private void openBookDetailsPage(BookModel dataModel) {
+        Intent intent = new Intent(getApplicationContext(), BookDetailsActivity.class);
+        intent.putExtra("bookId", dataModel.getId());
+        startActivity(intent);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.appbar, menu);
@@ -62,10 +92,14 @@ public class BooksListActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                System.out.print("Searching..................."+query);
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String s) {
+
+                System.out.print("Searching..................."+s);
                 return false;
             }
         });
@@ -76,7 +110,6 @@ public class BooksListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                // User chose the "Settings" item, show the app settings UI...
                 return true;
 
             default:
@@ -90,7 +123,7 @@ public class BooksListActivity extends AppCompatActivity {
     public ArrayList<BookModel> getData(){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="https://www.googleapis.com/books/v1/volumes?q=algorithm&maxResults=40";
+        String url ="https://www.googleapis.com/books/v1/volumes?q="+q+"&maxResults=40";
 
         // Request a string response from the provided URL.
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -101,11 +134,11 @@ public class BooksListActivity extends AppCompatActivity {
                     int totalItems = response.getInt("totalItems");
                     for(int i=1;i<items.length();i++)
                     {
-                        String title="",author="",genre="",img="";
-                        int rating=0,id=0;
+                        String title="",author="",genre="",img="",id="";
+                        int rating=0;
                         try {
                             title = items.getJSONObject(i).getJSONObject("volumeInfo").getString("title");
-                            id = items.getJSONObject(i).getInt("id");
+                            id = items.getJSONObject(i).getString("id");
                             author = items.getJSONObject(i).getJSONObject("volumeInfo").getJSONArray("authors").getString(0);
                             rating = items.getJSONObject(i).getJSONObject("volumeInfo").getInt("averageRating");
                             genre = items.getJSONObject(i).getJSONObject("volumeInfo").getJSONArray("categories").getString(0);
@@ -116,15 +149,17 @@ public class BooksListActivity extends AppCompatActivity {
                         catch (JSONException e)
                         {
                             e.printStackTrace();
-//                            data.add(new BookModel(title, author, rating, genre));
-                            continue;
+                            data.add(new BookModel(id, title, author, rating, genre, img));
                         }
 
                     }
                     bookAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    progressBarHolder.setVisibility(View.INVISIBLE);
                 }
+                progressBarHolder.setVisibility(View.INVISIBLE);
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -134,6 +169,7 @@ public class BooksListActivity extends AppCompatActivity {
         });
         // Add the request to the RequestQueue.
         queue.add(jsonRequest);
+        progressBarHolder.setVisibility(View.VISIBLE);
         return data;
     }
 
@@ -169,7 +205,7 @@ public class BooksListActivity extends AppCompatActivity {
         List itemIds = new ArrayList<>();
         while(cursor.moveToNext()) {
             itemIds.add(cursor.getLong(cursor.getColumnIndexOrThrow(BookContract.BookEntry._ID)));
-            data.add(new BookModel(0,cursor.getString(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_TITLE)),
+            data.add(new BookModel("",cursor.getString(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_TITLE)),
                     cursor.getString(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_Author)),
                     cursor.getInt(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_Rating)),
                     cursor.getString(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_Genre)),

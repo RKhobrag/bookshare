@@ -54,16 +54,16 @@ public class BookAdapter extends ArrayAdapter implements View.OnClickListener{
     @Override
     public void onClick(View v) {
 
-        int position=(Integer) v.getTag();
-        Object object= getItem(position);
-        BookModel dataModel=(BookModel)object;
-        openBookDetailsPage(dataModel);
-        switch (v.getId())
-        {
-            case R.id.thumbnail:
-
-                break;
-        }
+//        int position=(Integer) v.getTag();
+//        Object object= getItem(position);
+//        BookModel dataModel=(BookModel)object;
+//        openBookDetailsPage(dataModel);
+//        switch (v.getId())
+//        {
+//            case R.id.thumbnail:
+//
+//                break;
+//        }
     }
 
     private void openBookDetailsPage(BookModel dataModel) {

@@ -5,7 +5,7 @@ package com.rkhobrag.bookshare.adapters;
  */
 
 public class BookModel {
-    int id;
+    String id;
     String title;
     String author;
     int rating;
@@ -13,7 +13,7 @@ public class BookModel {
     String imgUrl;
     VolumeInfo volumeInfo = new VolumeInfo();
 
-    public BookModel(int id, String title, String author, int rating, String genre, String imgUrl) {
+    public BookModel(String id, String title, String author, int rating, String genre, String imgUrl) {
         this.title = title;
         this.author = author;
         this.rating = rating;
@@ -22,11 +22,11 @@ public class BookModel {
         this.id = id;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
