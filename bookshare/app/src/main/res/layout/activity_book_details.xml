@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:layout_height="match_parent"
+    tools:context="com.rkhobrag.bookshare.BookDetailsActivity">
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/thumbnail"
@@ -53,6 +54,16 @@
         android:layout_below="@id/genre"
         android:layout_marginTop="1dip"
         android:layout_toRightOf="@+id/thumbnail"
-         />
+        />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/thumbnail"
+        android:layout_marginTop="1dip"
+        />
+
+</android.support.constraint.ConstraintLayout>

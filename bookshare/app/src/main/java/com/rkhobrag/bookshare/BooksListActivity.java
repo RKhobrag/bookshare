@@ -9,6 +9,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -100,18 +101,21 @@ public class BooksListActivity extends AppCompatActivity {
                     int totalItems = response.getInt("totalItems");
                     for(int i=1;i<items.length();i++)
                     {
-                        String title="",author="",genre="";
-                        int rating=0;
+                        String title="",author="",genre="",img="";
+                        int rating=0,id=0;
                         try {
                             title = items.getJSONObject(i).getJSONObject("volumeInfo").getString("title");
+                            id = items.getJSONObject(i).getInt("id");
                             author = items.getJSONObject(i).getJSONObject("volumeInfo").getJSONArray("authors").getString(0);
                             rating = items.getJSONObject(i).getJSONObject("volumeInfo").getInt("averageRating");
                             genre = items.getJSONObject(i).getJSONObject("volumeInfo").getJSONArray("categories").getString(0);
-                            data.add(new BookModel(title, author, rating, genre));
+                            img = items.getJSONObject(i).getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("smallThumbnail");
+                            data.add(new BookModel(id, title, author, rating, genre, img));
                             System.out.print(title);
                         }
                         catch (JSONException e)
                         {
+                            e.printStackTrace();
 //                            data.add(new BookModel(title, author, rating, genre));
                             continue;
                         }
@@ -165,10 +169,11 @@ public class BooksListActivity extends AppCompatActivity {
         List itemIds = new ArrayList<>();
         while(cursor.moveToNext()) {
             itemIds.add(cursor.getLong(cursor.getColumnIndexOrThrow(BookContract.BookEntry._ID)));
-            data.add(new BookModel(cursor.getString(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_TITLE)),
+            data.add(new BookModel(0,cursor.getString(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_TITLE)),
                     cursor.getString(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_Author)),
                     cursor.getInt(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_Rating)),
-                    cursor.getString(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_Genre))
+                    cursor.getString(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_Genre)),
+                    ""
                     ));
         }
         cursor.close();

@@ -5,18 +5,29 @@ package com.rkhobrag.bookshare.adapters;
  */
 
 public class BookModel {
+    int id;
     String title;
-    String Author;
+    String author;
     int rating;
     String genre;
-    String img;
+    String imgUrl;
     VolumeInfo volumeInfo = new VolumeInfo();
 
-    public BookModel(String title, String author, int rating, String genre) {
+    public BookModel(int id, String title, String author, int rating, String genre, String imgUrl) {
         this.title = title;
-        Author = author;
+        this.author = author;
         this.rating = rating;
         this.genre = genre;
+        this.imgUrl = imgUrl;
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public VolumeInfo getVolumeInfo() {
@@ -36,11 +47,11 @@ public class BookModel {
     }
 
     public String getAuthor() {
-        return Author;
+        return author;
     }
 
     public void setAuthor(String author) {
-        Author = author;
+        this.author = author;
     }
 
     public int getRating() {
@@ -59,12 +70,12 @@ public class BookModel {
         this.genre = genre;
     }
 
-    public String getImg() {
-        return img;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public class VolumeInfo{

@@ -1,6 +1,10 @@
 package com.rkhobrag.bookshare.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +14,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.Volley;
+import com.rkhobrag.bookshare.BookDetailsActivity;
 import com.rkhobrag.bookshare.R;
 
 import java.util.ArrayList;
+
+import static android.support.v4.content.ContextCompat.startActivity;
 
 /**
  * Created by rakesh on 19/10/17.
@@ -21,20 +32,23 @@ import java.util.ArrayList;
 public class BookAdapter extends ArrayAdapter implements View.OnClickListener{
     private ArrayList<BookModel> dataSet;
     Context mContext;
+    private RequestQueue mRequestQueue;
+    private ImageLoader mImageLoader;
 
     // View lookup cache
     private static class ViewHolder {
         TextView txtTitle;
         TextView txtAuthor;
         TextView txtGenre;
-        ImageView img;
+        TextView txtRating;
+        NetworkImageView img;
     }
 
     public BookAdapter(ArrayList<BookModel> data, Context context) {
         super(context, R.layout.book_item, data);
         this.dataSet = data;
         this.mContext=context;
-
+        mRequestQueue = Volley.newRequestQueue(getContext());
     }
 
     @Override
@@ -43,13 +57,19 @@ public class BookAdapter extends ArrayAdapter implements View.OnClickListener{
         int position=(Integer) v.getTag();
         Object object= getItem(position);
         BookModel dataModel=(BookModel)object;
-
+        openBookDetailsPage(dataModel);
         switch (v.getId())
         {
-            case R.id.img:
+            case R.id.thumbnail:
 
                 break;
         }
+    }
+
+    private void openBookDetailsPage(BookModel dataModel) {
+        Intent intent = new Intent(getContext(), BookDetailsActivity.class);
+        intent.putExtra("bookId", dataModel.getId());
+        startActivity(getContext(), intent, null);
     }
 
     private int lastPosition = -1;
@@ -71,7 +91,8 @@ public class BookAdapter extends ArrayAdapter implements View.OnClickListener{
             viewHolder.txtTitle = (TextView) convertView.findViewById(R.id.title);
             viewHolder.txtAuthor = (TextView) convertView.findViewById(R.id.author);
             viewHolder.txtGenre = (TextView) convertView.findViewById(R.id.genre);
-            viewHolder.img = (ImageView) convertView.findViewById(R.id.img);
+            viewHolder.txtRating = (TextView) convertView.findViewById(R.id.rating);
+            viewHolder.img = (NetworkImageView) convertView.findViewById(R.id.thumbnail);
 
             result=convertView;
 
@@ -88,10 +109,30 @@ public class BookAdapter extends ArrayAdapter implements View.OnClickListener{
         viewHolder.txtTitle.setText(bookModel.getTitle());
         viewHolder.txtAuthor.setText(bookModel.getAuthor());
         viewHolder.txtGenre.setText(bookModel.getGenre());
+        viewHolder.txtRating.setText(String.valueOf(bookModel.getRating()));
         viewHolder.img.setOnClickListener(this);
-        viewHolder.img.setTag(position);
+        viewHolder.img.setImageUrl(bookModel.getImgUrl(), getImageLoader());
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    public ImageLoader getImageLoader() {
+        getRequestQueue();
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        final int cacheSize = maxMemory / 8;
+        if (mImageLoader == null) {
+            mImageLoader = new ImageLoader(this.mRequestQueue,
+                    new BitmapCache(cacheSize));
+        }
+        return this.mImageLoader;
+    }
+
+    public RequestQueue getRequestQueue() {
+        if (mRequestQueue == null) {
+            mRequestQueue = Volley.newRequestQueue(getContext());
+        }
+
+        return mRequestQueue;
     }
 }
 
