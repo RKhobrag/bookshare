@@ -18,12 +18,22 @@
         android:background="@color/appbar"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="BookShare"
+            android:textColor="#ffffff" />
+        </android.support.v7.widget.Toolbar>
 
     <ListView
         android:id="@+id/book_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/body"
+        android:layout_margin="10dp">
 
     </ListView>
     </LinearLayout>

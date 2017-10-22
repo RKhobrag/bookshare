@@ -4,25 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.rkhobrag.bookshare.BookDetailsActivity"
-    android:background="@drawable/books">
+    android:background="@drawable/book_bg"
+    tools:context="com.rkhobrag.bookshare.BookDetailsActivity">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="8dp">
-        <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/appbar"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/appbar"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:text="BookShare"
+                    android:textColor="#ffffff" />
+            </android.support.v7.widget.Toolbar>
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/details"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -80,6 +88,28 @@
             android:layout_toRightOf="@+id/thumbnail"
             android:layout_marginTop="1dip"
             />
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/ic_grade_black_24dp"
+                android:layout_toRightOf="@+id/rating"
+                android:layout_below="@id/genre"
+                android:paddingLeft="2dp"
+                android:layout_marginTop="5dp"
+                />
+
+        <Button
+            android:id="@+id/web_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:linksClickable="true"
+            android:layout_toRightOf="@+id/thumbnail"
+            android:layout_below="@id/rating"
+            android:textColor="@color/white"
+            android:text="Read Now"
+            android:background="@color/appbar"
+            />
 
     </RelativeLayout>
         <android.support.v4.widget.NestedScrollView
@@ -94,7 +124,7 @@
                 android:textColor="@android:color/black"
                 android:layout_marginTop="1dip"
                 android:padding="10dp"
-
+                android:textStyle="italic"
                 />
         </android.support.v4.widget.NestedScrollView>
     </LinearLayout>

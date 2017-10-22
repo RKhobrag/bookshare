@@ -32,15 +32,15 @@ public class MainActivity extends AppCompatActivity {
         searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()) );
         searchView.onActionViewExpanded();
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.appbar, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()) );
-
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+////        getMenuInflater().inflate(R.menu.appbar, menu);
+////        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+////        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+////        searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()) );
+//
+//        return true;
+//    }
 
     private void insertData() {
         BookshareDbHelper dbHelper = new BookshareDbHelper(getApplicationContext());

@@ -12,14 +12,34 @@ public class BookModel {
     String genre;
     String imgUrl;
     VolumeInfo volumeInfo = new VolumeInfo();
+    String epubLink;
+    String webReaderLink;
 
-    public BookModel(String id, String title, String author, int rating, String genre, String imgUrl) {
+    public BookModel(String id, String title, String author, int rating, String genre, String imgUrl, String epubLink, String webReaderLink) {
         this.title = title;
         this.author = author;
         this.rating = rating;
         this.genre = genre;
         this.imgUrl = imgUrl;
         this.id = id;
+        this.webReaderLink = webReaderLink;
+        this.epubLink = epubLink;
+    }
+
+    public String getEpubLink() {
+        return epubLink;
+    }
+
+    public void setEpubLink(String epubLink) {
+        this.epubLink = epubLink;
+    }
+
+    public String getWebReaderLink() {
+        return webReaderLink;
+    }
+
+    public void setWebReaderLink(String webReaderLink) {
+        this.webReaderLink = webReaderLink;
     }
 
     public String getId() {

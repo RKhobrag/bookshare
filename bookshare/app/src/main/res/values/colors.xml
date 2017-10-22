@@ -3,7 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="appbar">#74081c</color>
-    <color name="details">#f3f8fa</color>
-    <color name="body">#f6f7f7</color>
+    <color name="appbar">#870107</color>
+    <color name="details">#38c44d4d</color>
+    <color name="body">#d4f7f6f6</color>
+    <color name="heading">#0ff4a511</color>
+    <color name="white">#fdf4f1f3</color>
 </resources>

@@ -1,9 +1,11 @@
 package com.rkhobrag.bookshare;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,25 +88,11 @@ public class BooksListActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.appbar, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()) );
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView =
-                (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                System.out.print("Searching..................."+query);
-                return false;
-            }
-            @Override
-            public boolean onQueryTextChange(String s) {
-
-                System.out.print("Searching..................."+s);
-                return false;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
@@ -123,7 +112,7 @@ public class BooksListActivity extends AppCompatActivity {
     public ArrayList<BookModel> getData(){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="https://www.googleapis.com/books/v1/volumes?q="+q+"&maxResults=40";
+        String url ="https://www.googleapis.com/books/v1/volumes?q="+ Uri.encode(q)+"&maxResults=40";
 
         // Request a string response from the provided URL.
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -134,7 +123,7 @@ public class BooksListActivity extends AppCompatActivity {
                     int totalItems = response.getInt("totalItems");
                     for(int i=1;i<items.length();i++)
                     {
-                        String title="",author="",genre="",img="",id="";
+                        String title="",author="",genre="",img="",id="",epub="",webReader="";
                         int rating=0;
                         try {
                             title = items.getJSONObject(i).getJSONObject("volumeInfo").getString("title");
@@ -143,13 +132,14 @@ public class BooksListActivity extends AppCompatActivity {
                             rating = items.getJSONObject(i).getJSONObject("volumeInfo").getInt("averageRating");
                             genre = items.getJSONObject(i).getJSONObject("volumeInfo").getJSONArray("categories").getString(0);
                             img = items.getJSONObject(i).getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("smallThumbnail");
-                            data.add(new BookModel(id, title, author, rating, genre, img));
+                            webReader = items.getJSONObject(i).getJSONObject("accessInfo").getString("webReaderLink");
+                            data.add(new BookModel(id, title, author, rating, genre, img, epub, webReader));
                             System.out.print(title);
                         }
                         catch (JSONException e)
                         {
                             e.printStackTrace();
-                            data.add(new BookModel(id, title, author, rating, genre, img));
+                            data.add(new BookModel(id, title, author, rating, genre, img, epub, webReader));
                         }
 
                     }
@@ -209,7 +199,7 @@ public class BooksListActivity extends AppCompatActivity {
                     cursor.getString(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_Author)),
                     cursor.getInt(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_Rating)),
                     cursor.getString(cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_Genre)),
-                    ""
+                    "","",""
                     ));
         }
         cursor.close();

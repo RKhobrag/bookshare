@@ -10,28 +10,41 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="56dp"
         android:background="@color/appbar"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="8dp"
+        android:titleTextColor="@color/white">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="BookShare"
+            android:textColor="#ffffff" />
+        </android.support.v7.widget.Toolbar>
 
 
-    <android.support.v7.widget.SearchView
-        android:id="@+id/widget_search"
-        android:background="@color/details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:icon="@drawable/ic_search_black_48dp"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="withText|always"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        <android.support.v7.widget.SearchView
+            android:id="@+id/widget_search"
+            android:background="@color/body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_search_black_48dp"
+            app:actionViewClass="android.support.v7.widget.SearchView"
+            app:showAsAction="withText|always"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </android.support.v7.widget.SearchView>
+        </android.support.v7.widget.SearchView>
 
 </android.support.constraint.ConstraintLayout>
